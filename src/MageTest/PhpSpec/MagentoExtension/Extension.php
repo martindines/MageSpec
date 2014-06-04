@@ -51,6 +51,8 @@ use MageTest\PhpSpec\MagentoExtension\Locator\Magento\ControllerLocator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\ControllerGenerator;
 use MageTest\PhpSpec\MagentoExtension\CodeGenerator\Generator\ControllerSpecificationGenerator;
 
+use MageTest\PhpSpec\MagentoExtension\Locator\Magento\LibLocator;
+
 /**
  * Extension
  *
@@ -193,6 +195,12 @@ class Extension implements ExtensionInterface
             $c->setShared('locator.locators.controller_locator',
                 function ($c) use ($srcNS, $specPrefix, $srcPath, $specPath) {
                     return new ControllerLocator($srcNS, $specPrefix, $srcPath, $specPath);
+                }
+            );
+
+            $c->setShared('locator.locators.lib_locator',
+                function ($c) use ($srcNS, $specPrefix, $srcPath, $specPath) {
+                    return new LibLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
             );
 

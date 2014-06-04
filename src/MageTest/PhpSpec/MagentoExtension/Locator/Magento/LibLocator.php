@@ -26,20 +26,20 @@ use PhpSpec\Locator\ResourceLocatorInterface;
 use PhpSpec\Util\Filesystem;
 
 /**
- * BlockLocator
+ * HelperLocator
  *
  * @category   MageTest
  * @package    PhpSpec_MagentoExtension
  *
  * @author     MageTest team (https://github.com/MageTest/MageSpec/contributors)
  */
-class BlockLocator implements ResourceLocatorInterface
+class LibLocator implements ResourceLocatorInterface
 {
-    const LOCAL_CODE_POOL = 'app/code/local';
+    const LOCAL_CODE_POOL = 'lib';
 
-    const CLASS_TYPE = 'Block';
+    const CLASS_TYPE = 'Helper';
 
-    const VALIDATOR = '/^(block):([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)(_[\w]+)?$/';
+    const VALIDATOR = '/^(helper):([a-zA-Z0-9]+)_([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)(_[\w]+)?$/';
 
     private $srcPath;
     private $specPath;
@@ -104,7 +104,7 @@ class BlockLocator implements ResourceLocatorInterface
     public function supportsQuery($query)
     {
         $validator   = self::VALIDATOR;
-        $isSupported = (bool) preg_match($validator, $query) || $this->isSupported($query);;
+        $isSupported = (bool) preg_match($validator, $query) || $this->isSupported($query);
 
         return $isSupported;
     }
@@ -160,17 +160,17 @@ class BlockLocator implements ResourceLocatorInterface
             $vendor = ucfirst(array_shift($matches));
             $module = ucfirst(array_shift($matches));
 
-            $block = implode('_', array_map('ucfirst', explode('_', implode($matches))));
+            $helper = implode('_', array_map('ucfirst', explode('_', implode($matches))));
 
-            $classname = implode('_', array($vendor, $module, self::CLASS_TYPE, $block));
+            $classname = implode('_', array($vendor, $module, self::CLASS_TYPE, $helper));
         }
 
-        return new BlockResource(explode('_', $classname), $this);
+        return new LibResource(explode('_', $classname), $this);
     }
 
     public function getPriority()
     {
-        return 30;
+        return 20;
     }
 
     protected function findSpecResources($path)
@@ -204,15 +204,12 @@ class BlockLocator implements ResourceLocatorInterface
         $relative = substr($path, strlen($this->fullSpecPath), -4);
         $relative = preg_replace('/Spec$/', '', $relative);
 
-        return new BlockResource(explode(DIRECTORY_SEPARATOR, $relative), $this);
+        return new LibResource(explode(DIRECTORY_SEPARATOR, $relative), $this);
     }
 
     private function isSupported($file)
     {
-        if (strpos($file, 'Block') > 0) {
+        if ($file)
             return true;
-        }
-
-        return false;
     }
 }

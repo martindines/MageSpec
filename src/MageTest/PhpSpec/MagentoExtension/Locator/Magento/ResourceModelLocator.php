@@ -35,7 +35,7 @@ use PhpSpec\Util\Filesystem;
  */
 class ResourceModelLocator implements ResourceLocatorInterface
 {
-    const LOCAL_CODE_POOL = 'local';
+    const LOCAL_CODE_POOL = 'app/code/local';
 
     const CLASS_TYPE = 'Model_Resource';
 
