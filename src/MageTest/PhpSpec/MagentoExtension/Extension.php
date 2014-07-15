@@ -185,13 +185,26 @@ class Extension implements ExtensionInterface
                     return new LibLocator($srcNS, $specPrefix, $srcPath, $specPath);
                 }
             );
-
-            $this->configureAutoloader($srcPath);
         });
+
+        $this->bootstrap();
     }
 
-    public function configureAutoloader($srcPath)
+    public function bootstrap()
     {
-        MageLoader::register($srcPath);
+        \Mage::app();
+
+        $autoloader_callbacks = spl_autoload_functions();
+
+        $original_autoload=null;
+        foreach($autoloader_callbacks as &$callback)
+        {
+            if(is_array($callback) && ($callback[0] instanceof \Varien_Autoload))
+            {
+                spl_autoload_unregister($callback);
+            }
+        }
+
+        MageLoader::register();
     }
 }
